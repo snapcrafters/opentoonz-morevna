@@ -1,5 +1,5 @@
 name: opentoonz-morevna
-version: "1.2.0.2"
+version: "1.2.1"
 summary: OpenToonz - Morevna Edition
 description: |
   Published by DWANGO, OpenToonz is based on Toonz Studio Ghibli Version,
@@ -64,7 +64,7 @@ parts:
     plugin: cmake
     source: https://github.com/morevnaproject/opentoonz.git
     source-type: git
-    source-tag: 'v1.2.0.2-morevna'
+    source-tag: 'v1.2.1'
     build: |
       cd thirdparty/tiff-4.0.3
       ./configure --with-pic --disable-jbig
