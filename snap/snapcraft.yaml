@@ -1,16 +1,20 @@
 name: opentoonz-morevna
-version: "1.2.1"
+version: "v1.2.0.3"
 summary: OpenToonz - Morevna Edition
 description: |
   Published by DWANGO, OpenToonz is based on Toonz Studio Ghibli Version,
   originally developed in Italy by Digital Video, Inc., and customized
   by Studio Ghibli over many years of production.
 
+base: core18
+
 confinement: strict
 grade: stable
 
 apps:
   opentoonz-morevna:
+    environment:
+      LD_LIBRARY_PATH: "$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio:$LD_LIBRARY_PATH"
     command: desktop-launch $SNAP/bin/opentoonz
     plugs:
       - desktop
@@ -59,12 +63,12 @@ parts:
       - libjson-c-dev
       - libgirepository1.0-dev
       - libglib2.0-dev
-  opentoonz:
+  opentoonz-morevna:
     after: [libmypaint, desktop-qt5]
     plugin: cmake
     source: https://github.com/morevnaproject/opentoonz.git
     source-type: git
-    source-tag: 'v1.2.1'
+    source-tag: 'v1.2.0.3-morevna'
     build: |
       cd thirdparty/tiff-4.0.3
       ./configure --with-pic --disable-jbig
@@ -110,5 +114,25 @@ parts:
       - gstreamer1.0-plugins-good
       - gstreamer1.0-plugins-bad
       - libqt5multimedia5-plugins
-    organize:
-      usr/lib/*/pulseaudio/*: lib/
+  desktop-qt5:
+      build-packages:
+        - qtbase5-dev
+        - dpkg-dev
+      make-parameters:
+        - FLAVOR=qt5
+      plugin: make
+      source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+      source-subdir: qt
+      stage-packages:
+        - libxkbcommon0
+        - ttf-ubuntu-font-family
+        - dmz-cursor-theme
+        - light-themes
+        - adwaita-icon-theme
+        - gnome-themes-standard
+        - shared-mime-info
+        - libqt5gui5
+        - libgdk-pixbuf2.0-0
+        - libqt5svg5
+        - locales-all
+        - xdg-user-dirs
