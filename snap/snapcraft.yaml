@@ -11,10 +11,16 @@ base: core18
 confinement: strict
 grade: stable
 
+architectures:
+  - build-on: amd64
+  - build-on: i386
+
 apps:
   opentoonz-morevna:
     environment:
-      LD_LIBRARY_PATH: "$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio:$LD_LIBRARY_PATH"
+      LD_LIBRARY_PATH: "$LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
+      HOME: "$SNAP_USER_COMMON"
+      DISABLE_WAYLAND: 1
     command: desktop-launch $SNAP/bin/opentoonz
     plugs:
       - desktop
@@ -65,11 +71,11 @@ parts:
       - libglib2.0-dev
   opentoonz-morevna:
     after: [libmypaint, desktop-qt5]
-    plugin: cmake
+    plugin: make
     source: https://github.com/morevnaproject/opentoonz.git
     source-type: git
     source-tag: 'v1.2.0.3-morevna'
-    build: |
+    override-build: |
       cd thirdparty/tiff-4.0.3
       ./configure --with-pic --disable-jbig
       make
@@ -78,12 +84,10 @@ parts:
       cd build
       cmake ../toonz/sources
       make
-    install: |
-      cp -a build/bin $SNAPCRAFT_PART_INSTALL/
-      cp -a build/lib/opentoonz/ $SNAPCRAFT_PART_INSTALL/lib
+      cp -a bin $SNAPCRAFT_PART_INSTALL/
+      cp -a lib/opentoonz/ $SNAPCRAFT_PART_INSTALL/lib
       mkdir -p $SNAPCRAFT_PART_INSTALL/share/opentoonz
-      cp -a stuff $SNAPCRAFT_PART_INSTALL/share/opentoonz
-    #source-subdir: "toonz/sources"
+      cp -a ../stuff $SNAPCRAFT_PART_INSTALL/share/opentoonz
     build-packages:
       - build-essential
       - cmake
@@ -93,6 +97,7 @@ parts:
       - qtbase5-dev
       - libqt5svg5-dev
       - qtscript5-dev
+      - qttools5-dev
       - qttools5-dev-tools
       - libqt5opengl5-dev
       - libsuperlu-dev
@@ -114,6 +119,14 @@ parts:
       - gstreamer1.0-plugins-good
       - gstreamer1.0-plugins-bad
       - libqt5multimedia5-plugins
+      - libglew2.0
+      - libqt5printsupport5
+      - libqt5script5
+      - libblas3
+      - libpgm-5.2-0
+      - libsuperlu5
+      - freeglut3
+      - libgpm2
   desktop-qt5:
       build-packages:
         - qtbase5-dev
