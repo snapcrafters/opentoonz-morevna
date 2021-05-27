@@ -45,9 +45,10 @@ architectures:
 apps:
   opentoonz-morevna:
     environment:
-      LD_LIBRARY_PATH: "$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
-      HOME: "$SNAP_USER_COMMON"
+      # Fallback to XWayland if running in a Wayland session.
       DISABLE_WAYLAND: 1
+      HOME: "$SNAP_USER_COMMON"
+      LD_LIBRARY_PATH: "$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
     command: bin/opentoonz
     command-chain:
       - bin/desktop-launch
