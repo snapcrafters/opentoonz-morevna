@@ -48,7 +48,10 @@ apps:
       LD_LIBRARY_PATH: "$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
       HOME: "$SNAP_USER_COMMON"
       DISABLE_WAYLAND: 1
-    command: desktop-launch $SNAP/bin/opentoonz
+    command: bin/opentoonz
+    command-chain:
+      - bin/desktop-launch
+      - snap/command-chain/ensure-defaults.sh
     plugs:
       - desktop
       - desktop-legacy
@@ -80,10 +83,6 @@ apps:
     command: tfarmserver
     plugs:
       - home
-
-layout:
-  /usr/bin/ffmpeg:
-    bind-file: $SNAP/usr/bin/ffmpeg
 
 parts:
   libmypaint:
@@ -158,6 +157,9 @@ parts:
       - libsuperlu5
       - freeglut3
       - libgpm2
+      - libslang2
+    stage:
+      - -usr/share/X11/rgb.txt
   desktop-qt5:
       build-packages:
         - qtbase5-dev
@@ -180,3 +182,14 @@ parts:
         - libqt5svg5
         - locales-all
         - xdg-user-dirs
+
+  # Inject default preferences to point to ffmpeg in the snap itself
+  default-preferences:
+    after: [ opentoonz-morevna ]
+    plugin: dump
+    source: default-preferences
+    organize:
+      preferences.ini: share/opentoonz/stuff/profiles/layouts/settings/preferences.ini
+      ensure-defaults.sh: snap/command-chain/ensure-defaults.sh
+    stage-packages:
+      - crudini
