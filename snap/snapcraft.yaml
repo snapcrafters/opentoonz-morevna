@@ -64,23 +64,23 @@ apps:
       - removable-media
       - pulseaudio
   tcleanup:
-    command: tcleanup
+    command: bin/tcleanup
     plugs:
       - home
   tcomposer:
-    command: tcomposer
+    command: bin/tcomposer
     plugs:
       - home
   tconverter:
-    command: tconverter
+    command: bin/tconverter
     plugs:
       - home
   tfarmcontroller:
-    command: tfarmcontroller
+    command: bin/tfarmcontroller
     plugs:
       - home
   tfarmserver:
-    command: tfarmserver
+    command: bin/tfarmserver
     plugs:
       - home
 
